@@ -1,0 +1,4 @@
+# Ignore Terraform state files, which contain sensitive information
+.terraform*
+terraform.tfstate*
+*.tfvars
