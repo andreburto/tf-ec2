@@ -39,4 +39,4 @@ jobs:
 
       - name: Get EC2 Instance Info
         run: |
-          terraform output
+          terraform output -json >> $GITHUB_OUTPUT
