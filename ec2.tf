@@ -11,4 +11,10 @@ resource "aws_instance" "server" {
     subnet_id                   = data.aws_subnet.server.id
     security_groups             = [aws_security_group.server.id]
     user_data                   = file("userdata.sh")
+
+    root_block_device {
+        volume_size = 100
+        volume_type = "gp2"
+        delete_on_termination = true
+    }
 }
