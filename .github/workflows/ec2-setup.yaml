@@ -6,6 +6,9 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  KEY_NAME: andy-test
+
 jobs:
   setup-ec2:
     runs-on: ubuntu-latest
@@ -29,4 +32,12 @@ jobs:
         run: terraform init
 
       - name: Apply Terraform configuration
-        run: terraform plan -var='key_name=andy-test'
+        run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Apply Terraform configuration
+        run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Get EC2 Instance Info
+        run: |
+          echo "INSTANCE_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
+          echo "INSTANCE_ID=$(terraform output -raw ec2_instance_id)" >> $GITHUB_OUTPUT
