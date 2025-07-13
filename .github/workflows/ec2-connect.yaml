@@ -1,4 +1,4 @@
-name: EC2 Setup
+name: EC2 Connect
 
 on:
   # push:

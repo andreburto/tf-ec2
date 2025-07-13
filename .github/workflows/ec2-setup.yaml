@@ -1,4 +1,4 @@
-name: EC2 Connect
+name: EC2 Setup
 
 on:
   workflow_dispatch:
