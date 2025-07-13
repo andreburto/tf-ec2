@@ -35,7 +35,7 @@ jobs:
         run: |
           terraform output -raw ec2_public_ip > ec2_public_ip.txt
           cat ec2_public_ip.txt
-          echo "${SSH_PRIVATE_KEY}" > private_key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           echo "" >> private_key.pem
           chmod 400 private_key.pem
           ssh -v -o "StrictHostKeyChecking=no" -i private_key.pem ubuntu@$(cat ec2_public_ip.txt) "hostname"
