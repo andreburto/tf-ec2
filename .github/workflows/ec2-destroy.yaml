@@ -3,9 +3,6 @@ name: EC2 Destroy
 on:
   workflow_dispatch:
 
-env:
-  KEY_NAME: andy-test
-
 jobs:
   destroy-ec2:
     runs-on: ubuntu-latest
@@ -33,5 +30,4 @@ jobs:
         run: terraform init
 
       - name: Destroy
-        if: always()
-        run: terraform destroy -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+        run: terraform destroy -auto-approve -var="key_name=${{ vars.KEY_NAME }}"

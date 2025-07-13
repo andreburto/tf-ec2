@@ -3,9 +3,6 @@ name: EC2 Setup
 on:
   workflow_dispatch:
 
-env:
-  KEY_NAME: andy-test
-
 jobs:
   setup-ec2:
     runs-on: ubuntu-latest
@@ -33,10 +30,10 @@ jobs:
         run: terraform init
 
       - name: Plan Terraform configuration
-        run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
+        run: terraform plan -var="key_name=${{ vars.KEY_NAME }}"
 
       - name: Apply Terraform configuration
-        run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+        run: terraform apply -auto-approve -var="key_name=${{ vars.KEY_NAME }}"
 
       - name: Output EC2 Instance Info
         shell: bash
@@ -44,6 +41,6 @@ jobs:
         run: |
           echo "### Getting EC2 Instance Info"
           terraform output -raw ec2_instance_id > instance_id.txt
-          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_STEP_OUTPUT
+          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_STEP_SUMMARY
           terraform output -raw ec2_public_ip > ec2_public_ip.txt
-          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_STEP_OUTPUT
+          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_STEP_SUMMARY
