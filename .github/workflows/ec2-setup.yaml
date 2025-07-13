@@ -40,10 +40,11 @@ jobs:
       - name: Get EC2 Instance Info
         id: ec2_info
         run: |
-          EC2_INSTANCE_ID=$(terraform output -raw ec2_instance_id)
+          terraform output -raw ec2_instance_id > instance_id.txt
           echo "EC2_INSTANCE_ID: $EC2_INSTANCE_ID"
           rm -f "$GITHUB_STEP_SUMMARY"
-          echo "### EC2_INSTANCE_ID: ${EC2_INSTANCE_ID}" > "$GITHUB_STEP_SUMMARY"
+          echo "### EC2 Instance" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Instance ID: \`$(cat instance_id.txt)\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Destroy
         if: always()
