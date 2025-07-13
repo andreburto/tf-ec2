@@ -1,15 +1,13 @@
-name: EC2 Connect
+name: EC2 Setup
 
 on:
   # push:
   #   branches:
   #     - master
   workflow_dispatch:
-    # inputs:
-    #   instance_id:
-    #     description: 'EC2 Instance ID'
-    #     required: true
-    #     type: string
+
+env:
+  KEY_NAME: andy-test
 
 jobs:
   setup-ec2:
@@ -28,7 +26,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up Terraform
+      - name: Set up Terraform 
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.5.0
@@ -36,15 +34,9 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Apply Terraform configuration
-        run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
-
-      - name: Apply Terraform configuration
-        run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
-
       - name: Get EC2 Instance Info
         id: ec2_info
         run: |
-          terraform output -raw ec2_public_ip > ec2_public_ip.txt
-          cat ec2_public_ip.txt
-          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_ENV
+          terraform output -raw  > instance_id.txt
+          cat instance_id.txt
+          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_ENV

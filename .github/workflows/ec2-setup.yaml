@@ -1,10 +1,7 @@
-name: EC2 Setup
+name: EC2 Connect
 
 on:
   workflow_dispatch:
-
-env:
-  KEY_NAME: andy-test
 
 jobs:
   setup-ec2:
@@ -31,9 +28,15 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
+      - name: Apply Terraform configuration
+        run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Apply Terraform configuration
+        run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+
       - name: Get EC2 Instance Info
         id: ec2_info
         run: |
-          terraform output -raw  > instance_id.txt
-          cat instance_id.txt
-          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_ENV
+          terraform output -raw ec2_public_ip > ec2_public_ip.txt
+          cat ec2_public_ip.txt
+          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_ENV
