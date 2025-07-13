@@ -5,7 +5,7 @@ on:
 
 env:
   KEY_NAME: andy-test
-  
+
 jobs:
   setup-ec2:
     runs-on: ubuntu-latest
@@ -36,10 +36,3 @@ jobs:
 
       - name: Apply Terraform configuration
         run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
-
-      - name: Get EC2 Instance Info
-        id: ec2_info
-        run: |
-          terraform output -raw ec2_instance_id > instance_id.txt
-          cat instance_id.txt
-          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_ENV
