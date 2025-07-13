@@ -1,4 +1,4 @@
-name: EC2 Setup
+name: EC2 Destroy
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ env:
   KEY_NAME: andy-test
 
 jobs:
-  setup-ec2:
+  destroy-ec2:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,9 +31,6 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Get EC2 Instance Info
-        id: ec2_info
-        run: |
-          terraform output -raw  > instance_id.txt
-          cat instance_id.txt
-          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_ENV
+      - name: Destroy
+        if: always()
+        run: terraform destroy -auto-approve -var="key_name=${{ env.KEY_NAME }}"

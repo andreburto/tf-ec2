@@ -1,0 +1,50 @@
+name: EC2 Connect
+
+on:
+  # push:
+  #   branches:
+  #     - master
+  workflow_dispatch:
+    # inputs:
+    #   instance_id:
+    #     description: 'EC2 Instance ID'
+    #     required: true
+    #     type: string
+
+jobs:
+  setup-ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.1.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Apply Terraform configuration
+        run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Apply Terraform configuration
+        run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Get EC2 Instance Info
+        id: ec2_info
+        run: |
+          terraform output -raw ec2_public_ip > ec2_public_ip.txt
+          cat ec2_public_ip.txt
+          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_ENV
