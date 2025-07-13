@@ -3,6 +3,9 @@ name: EC2 Setup
 on:
   workflow_dispatch:
 
+env:
+  KEY_NAME: andy-test
+  
 jobs:
   setup-ec2:
     runs-on: ubuntu-latest
@@ -28,7 +31,7 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Apply Terraform configuration
+      - name: Plan Terraform configuration
         run: terraform plan -var="key_name=${{ env.KEY_NAME }}"
 
       - name: Apply Terraform configuration

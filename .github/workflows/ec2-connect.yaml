@@ -6,9 +6,6 @@ on:
   #     - master
   workflow_dispatch:
 
-env:
-  KEY_NAME: andy-test
-
 jobs:
   setup-ec2:
     runs-on: ubuntu-latest
