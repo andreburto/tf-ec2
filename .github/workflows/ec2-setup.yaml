@@ -41,9 +41,9 @@ jobs:
         id: ec2_info
         run: |
           EC2_INSTANCE_ID=$(terraform output -raw ec2_instance_id)
-          echo "EC2_INSTANCE_ID=$EC2_INSTANCE_ID" >> $GITHUB_ENV
           echo "EC2_INSTANCE_ID: $EC2_INSTANCE_ID"
-          echo "### EC2_INSTANCE_ID: ${EC2_INSTANCE_ID}" > $GITHUB_STEP_SUMMARY
+          # echo "### EC2_INSTANCE_ID: ${EC2_INSTANCE_ID}" > $GITHUB_STEP_SUMMARY
 
       - name: Destroy
+        if: always()
         run: terraform destroy -auto-approve -var="key_name=${{ env.KEY_NAME }}"
