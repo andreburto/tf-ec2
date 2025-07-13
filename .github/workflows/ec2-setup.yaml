@@ -27,6 +27,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.5.0
+          terraform_wrapper: false
 
       - name: Initialize Terraform
         run: terraform init
@@ -36,3 +37,13 @@ jobs:
 
       - name: Apply Terraform configuration
         run: terraform apply -auto-approve -var="key_name=${{ env.KEY_NAME }}"
+
+      - name: Output EC2 Instance Info
+        shell: bash
+        id: ec2_info
+        run: |
+          echo "### Getting EC2 Instance Info"
+          terraform output -raw ec2_instance_id > instance_id.txt
+          echo "instance_id=$(cat instance_id.txt)" >> $GITHUB_STEP_OUTPUT
+          terraform output -raw ec2_public_ip > ec2_public_ip.txt
+          echo "ec2_public_ip=$(cat ec2_public_ip.txt)" >> $GITHUB_STEP_OUTPUT
